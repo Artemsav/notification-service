@@ -55,5 +55,15 @@ class Message(models.Model):
         choices=STATUS_CHOICES,
         default=REGISTERED
     )
-    client = models.ForeignKey('Клиент', related_name='messages', on_delete=models.CASCADE)
-    mailing = models.ForeignKey('Рассылки', related_name='messages', on_delete=models.CASCADE)
+    client = models.ForeignKey(
+        Client,
+        verbose_name='Клиент',
+        related_name='messages',
+        on_delete=models.CASCADE
+        )
+    mailing = models.ForeignKey(
+        MailingList,
+        verbose_name='Рассылки',
+        related_name='messages',
+        on_delete=models.CASCADE
+        )
