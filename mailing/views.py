@@ -67,14 +67,14 @@ class MailingViewSet(viewsets.ModelViewSet):
         result = {}
 
         for row in mailing:
-            res = {'Total messages': 0, 'Sent': 0, 'No sent': 0}
+            mailing_summary = {}
             mail = Message.objects.filter(mailing_id=row['id']).all()
             group_sent = mail.filter(sending_status='Sent').count()
             group_no_sent = mail.filter(sending_status='No sent').count()
-            res['Total messages'] = len(mail)
-            res['Sent'] = group_sent
-            res['No sent'] = group_no_sent
-            result[row['id']] = res
+            mailing_summary['Total messages'] = len(mail)
+            mailing_summary['Sent'] = group_sent
+            mailing_summary['No sent'] = group_no_sent
+            result[row['id']] = mailing_summary
 
         content['The number of messages sent'] = result
         return Response(content)
