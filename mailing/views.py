@@ -53,9 +53,10 @@ class MailingViewSet(viewsets.ModelViewSet):
     @action(detail=True)
     def get_info(self, request, pk=None):
         get_object_or_404(MailingList, pk=pk)
-        messages = Message.objects.filter(1)
+        messages = Message.objects.filter(mailing_id=pk)
+        print(messages)
         serializer = MessageSerializer(messages, many=True)
-        #print(serializer.data)
+        print(serializer)
         return Response(serializer.data)
 
     @action(detail=False)
@@ -68,7 +69,7 @@ class MailingViewSet(viewsets.ModelViewSet):
 
         for mailing in mailings:
             mailing_summary = {}
-            mail = Message.objects.filter(mailing_id=mailing.id).all()
+            mail = Message.objects.filter(mailing_id=mailing.id)
             group_sent = mail.filter(status='DELIVERED').count()
             group_no_sent = mail.filter(status='POSTPONED').count()
             group_registered = mail.filter(status='REGISTERED').count()
