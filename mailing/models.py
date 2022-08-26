@@ -2,6 +2,31 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
 
+
+class MailingList(models.Model):
+    registered_at = models.DateTimeField(
+        'Зарегистрирован',
+        db_index=True
+        )
+    message = models.TextField('Сообщение клиенту')
+    end_time = models.DateTimeField(
+        'Дата и время окончания рассылки',
+        db_index=True
+        )
+    time_start = models.TimeField('Время начала рассылки')
+    time_end = models.TimeField('Время окончания рассылки')
+
+
+    class Meta:
+        verbose_name = 'рассылка'
+        verbose_name_plural = 'рассылки'
+
+    def __str__(self):
+        short_message = self.message[:20]
+        return f'{self.registered_at} {short_message}'
+
+
+
 class Client(models.Model):
     phonenumber = PhoneNumberField(
         'Номер телефона',
@@ -10,27 +35,13 @@ class Client(models.Model):
     mobile_operator_code = models.CharField('Код мобильного оператора', max_length=10)
     tag = models.SlugField('Тег')
     client_timezone = models.CharField('Часовой пояс', max_length=20)
-
-
-class MailingList(models.Model):
-    registered_at = models.DateTimeField(
-        'Зарегистрирован',
-        db_index=True
-        )
-    message = models.TextField('Сообщение клиенту')
     client = models.ForeignKey(
-        Client,
-        verbose_name='Клиент',
-        related_name='mailings',
+        MailingList,
+        verbose_name='Рассылки',
+        related_name='clients',
         on_delete=models.SET_NULL,  # can be kind of draft of mailing without clients? needs to think about
         null=True
         )
-    end_time = models.DateTimeField(
-        'Дата и время окончания рассылки',
-        db_index=True
-        )
-    time_start = models.TimeField('Время начала рассылки')
-    time_end = models.TimeField('Время окончания рассылки')
 
 
 class Message(models.Model):
