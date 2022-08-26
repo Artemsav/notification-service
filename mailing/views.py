@@ -52,29 +52,31 @@ class MailingViewSet(viewsets.ModelViewSet):
 
     @action(detail=True)
     def get_info(self, request, pk=None):
-        '''All info for a specific mailing list'''
-        messages = Message.objects.filter(mailing_id=pk)
+        get_object_or_404(MailingList, pk=pk)
+        messages = Message.objects.filter(1)
         serializer = MessageSerializer(messages, many=True)
+        #print(serializer.data)
         return Response(serializer.data)
 
     @action(detail=False)
     def get_fullinfo(self, request):
-        '''All info for a specific all mailing lists'''
         total_count = MailingList.objects.count()
-        mailing = MailingList.objects.values('id')
+        mailings = MailingList.objects.all()
         content = {'Total number of mailings': total_count,
                    'The number of messages sent': ''}
         result = {}
 
-        for row in mailing:
+        for mailing in mailings:
             mailing_summary = {}
-            mail = Message.objects.filter(mailing_id=row['id']).all()
-            group_sent = mail.filter(sending_status='Sent').count()
-            group_no_sent = mail.filter(sending_status='No sent').count()
+            mail = Message.objects.filter(mailing_id=mailing.id).all()
+            group_sent = mail.filter(status='DELIVERED').count()
+            group_no_sent = mail.filter(status='POSTPONED').count()
+            group_registered = mail.filter(status='REGISTERED').count()
             mailing_summary['Total messages'] = len(mail)
-            mailing_summary['Sent'] = group_sent
-            mailing_summary['No sent'] = group_no_sent
-            result[row['id']] = mailing_summary
+            mailing_summary['DELIVERED'] = group_sent
+            mailing_summary['POSTPONED'] = group_no_sent
+            mailing_summary['REGISTERED'] = group_registered
+            result[f'MailingList#id:{mailing.id}'] = mailing_summary
 
         content['The number of messages sent'] = result
         return Response(content)

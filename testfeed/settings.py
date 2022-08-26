@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drf_yasg',
     'phonenumber_field',
+    'rest_framework',
     'debug_toolbar',
     'mailing.apps.MailingConfig',
 ]
