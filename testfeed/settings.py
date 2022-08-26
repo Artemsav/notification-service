@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
     'phonenumber_field',
     'debug_toolbar',
     'mailing.apps.MailingConfig',
@@ -133,3 +134,7 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+END_POINT_URL = os.getenv('END_POINT_URL')
+
+API_TOKEN = os.getenv('API_TOKEN')

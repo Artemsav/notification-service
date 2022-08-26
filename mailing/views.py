@@ -4,6 +4,12 @@ from rest_framework.decorators import action
 from mailing.models import Client, MailingList, Message
 from rest_framework import viewsets
 from rest_framework.serializers import ModelSerializer
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+
+
+def redirect2admin(request):
+    return HttpResponseRedirect(reverse('admin:index'))
 
 
 class ClientSerializer(ModelSerializer):
@@ -44,22 +50,16 @@ class MailingViewSet(viewsets.ModelViewSet):
     serializer_class = MailingListSerializer
     queryset = MailingList.objects.all()
 
-    @action(detail=True, methods=['get'])
+    @action(detail=True)
     def get_info(self, request, pk=None):
-        """
-        Summary data for a specific mailing list
-        """
-        #mailings = MailingList.objects.all()
-        #get_object_or_404(mailings, pk=pk)
-        messages = Message.objects.filter(mailing_id=pk).all()
+        '''All info for a specific mailing list'''
+        messages = Message.objects.filter(mailing_id=pk)
         serializer = MessageSerializer(messages, many=True)
         return Response(serializer.data)
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False)
     def get_fullinfo(self, request):
-        """
-        Summary data for all mailings
-        """
+        '''All info for a specific all mailing lists'''
         total_count = MailingList.objects.count()
         mailing = MailingList.objects.values('id')
         content = {'Total number of mailings': total_count,

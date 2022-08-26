@@ -26,7 +26,7 @@ class MailingList(models.Model):
         null=True
         )
     end_time = models.DateTimeField(
-        'Время окончания рассылки',
+        'Дата и время окончания рассылки',
         db_index=True
         )
     time_start = models.TimeField('Время начала рассылки')
