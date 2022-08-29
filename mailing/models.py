@@ -9,12 +9,12 @@ class MailingList(models.Model):
         db_index=True
         )
     message = models.TextField('Сообщение клиенту')
-    end_time = models.DateTimeField(
+    closed_at = models.DateTimeField(
         'Дата и время окончания рассылки',
         db_index=True
         )
-    time_start = models.TimeField('Время начала рассылки')
-    time_end = models.TimeField('Время окончания рассылки')
+    sending_time_start = models.TimeField('Время начала рассылки')
+    sending_time_end = models.TimeField('Время окончания рассылки')
 
 
     class Meta:
@@ -35,13 +35,6 @@ class Client(models.Model):
     mobile_operator_code = models.CharField('Код мобильного оператора', max_length=10)
     tag = models.SlugField('Тег')
     client_timezone = models.CharField('Часовой пояс', max_length=20)
-    client = models.ForeignKey(
-        MailingList,
-        verbose_name='Рассылки',
-        related_name='clients',
-        on_delete=models.SET_NULL,  # can be kind of draft of mailing without clients? needs to think about
-        null=True
-        )
 
 
 class Message(models.Model):

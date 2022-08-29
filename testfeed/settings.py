@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+from decouple import config
 from pathlib import Path
 from dotenv import load_dotenv
 import os
@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'rest_framework',
     'debug_toolbar',
+    'django_celery_beat',
+    'django_celery_results',
     'mailing.apps.MailingConfig',
 ]
 
@@ -139,3 +141,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 END_POINT_URL = os.getenv('END_POINT_URL')
 
 API_TOKEN = os.getenv('API_TOKEN')
+
+# CELERY
+
+CELERY_BROKER_REDIS_URL = "redis://localhost:6380"
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_BROKER_URL = config('CELERY_BROKER_REDIS_URL', default='redis://localhost:6379')
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
+CELERY_BROCKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

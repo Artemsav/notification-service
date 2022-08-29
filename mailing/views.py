@@ -55,7 +55,10 @@ class MailingViewSet(viewsets.ModelViewSet):
         get_object_or_404(MailingList, pk=pk)
         messages = Message.objects.filter(mailing_id=pk)
         serializer = MessageSerializer(messages, many=True)
-        return Response(serializer.data)
+        mailing_without_messaget = {'status': 'Mailing is registered, but not messages sent and assigned yet'}
+        if serializer.data:
+            return Response(serializer.data)
+        return Response(mailing_without_messaget)
 
     @action(detail=False)
     def get_fullinfo(self, request):
