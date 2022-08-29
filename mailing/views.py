@@ -54,9 +54,7 @@ class MailingViewSet(viewsets.ModelViewSet):
     def get_info(self, request, pk=None):
         get_object_or_404(MailingList, pk=pk)
         messages = Message.objects.filter(mailing_id=pk)
-        print(messages)
         serializer = MessageSerializer(messages, many=True)
-        print(serializer)
         return Response(serializer.data)
 
     @action(detail=False)
