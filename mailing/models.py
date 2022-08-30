@@ -1,7 +1,6 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
-
-
+from mailing.timezones import USER_POSSIBLE_TIMEZONES
 
 class MailingList(models.Model):
     registered_at = models.DateTimeField(
@@ -16,7 +15,6 @@ class MailingList(models.Model):
     sending_time_start = models.TimeField('Время начала рассылки')
     sending_time_end = models.TimeField('Время окончания рассылки')
 
-
     class Meta:
         verbose_name = 'рассылка'
         verbose_name_plural = 'рассылки'
@@ -26,15 +24,20 @@ class MailingList(models.Model):
         return f'{self.registered_at} {short_message}'
 
 
-
 class Client(models.Model):
+    TIMEZONES = tuple(zip(USER_POSSIBLE_TIMEZONES, USER_POSSIBLE_TIMEZONES))
     phonenumber = PhoneNumberField(
         'Номер телефона',
         region='RU'
     )
     mobile_operator_code = models.CharField('Код мобильного оператора', max_length=10)
     tag = models.SlugField('Тег')
-    client_timezone = models.CharField('Часовой пояс', max_length=20)
+    client_timezone = models.CharField(
+        'Часовой пояс',
+        max_length=32,
+        choices=TIMEZONES,
+        default='UTC'
+        )
 
 
 class Message(models.Model):
