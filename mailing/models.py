@@ -51,11 +51,13 @@ class Message(models.Model):
     ]
     registered_at = models.DateTimeField(
         'Зарегистрирован',
-        db_index=True
+        db_index=True,
+        auto_now_add=True
         )
-    deliver_time = models.DateTimeField(
+    deliver_time = models.TimeField(
         'Время отравки сообщения',
-        db_index=True
+        db_index=True,
+        null=True
         )
     status = models.CharField(
         max_length=3,
